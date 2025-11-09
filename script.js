@@ -37,3 +37,27 @@ function refreshPage() {
         });
     }
 }
+// Mobile menu functionality
+const hamburger = document.querySelector('.hamburger');
+const navLinks = document.querySelector('.nav-links');
+const body = document.body;
+
+hamburger.addEventListener('click', () => {
+    hamburger.classList.toggle('active');
+    navLinks.classList.toggle('active');
+    body.classList.toggle('menu-open');
+    hamburger.setAttribute('aria-expanded', 
+        hamburger.classList.contains('active'));
+});
+
+// Close menu when clicking a link
+document.querySelectorAll('.nav-links a').forEach(link => {
+    link.addEventListener('click', () => {
+        hamburger.classList.remove('active');
+        navLinks.classList.remove('active');
+        body.classList.remove('menu-open');
+        hamburger.setAttribute('aria-expanded', 'false');
+    });
+});
+
+
