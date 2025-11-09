@@ -1,121 +1,540 @@
-/* Global Styles */
-body {
-    font-family: 'Arial', sans-serif;
+:root{
+    --accent1: #764ba2;
+    --accent2: #ff6b6b;
+    --text: #e6eef8;
+}
+/* keep smooth scrolling */
+html {
+    scroll-behavior: smooth;
+}
+
+* {
     margin: 0;
     padding: 0;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: #fff;
-    overflow-x: hidden;
+    box-sizing: border-box;
 }
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, #0f0f23, #1a1a2e);
+    color: var(--text);
+    line-height: 1.6;
+    overflow-x: hidden;
+    padding-top: 64px; /* reserve space for fixed nav */
+}
+
+nav {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(10px);
+    z-index: 100;
+    height: 64px; /* reserve space for fixed nav */
+}
+
+.nav-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.6rem 1rem; /* reduced padding for smaller screens */
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* Fancy top name / logo */
+.logo {
+  font-weight: 700;
+  font-size: 1.25rem;
+  text-decoration: none;
+  cursor: pointer;
+  display: inline-block;
+  line-height: 1;
+  padding: 6px 10px;
+  border-radius: 8px;
+  position: relative;
+  transition: transform .18s ease, box-shadow .18s ease;
+  -webkit-font-smoothing: antialiased;
+  color: var(--text);
+}
+
+/* gradient fill for surname */
+.logo-accent {
+  background: linear-gradient(90deg, var(--accent1), var(--accent2));
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  display: inline-block;
+  transition: background-position .6s ease, letter-spacing .3s ease;
+}
+
+/* animated underline that grows from left */
+.logo::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: -6px;
+  width: 0;
+  height: 3px;
+  background: linear-gradient(90deg, rgba(118,75,162,0.9), rgba(255,107,107,0.9));
+  border-radius: 3px;
+  transition: width .36s cubic-bezier(.2,.9,.2,1);
+  pointer-events: none;
+  opacity: 0.95;
+}
+
+/* hover / focus state */
+.logo:hover,
+.logo:focus {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 30px rgba(118,75,162,0.12), 0 6px 18px rgba(255,107,107,0.06);
+  text-decoration: none;
+}
+.logo:hover .logo-accent,
+.logo:focus .logo-accent {
+  background-position: 100% 0;
+  letter-spacing: 0.6px;
+}
+.logo:hover::after,
+.logo:focus::after {
+  width: 60%;
+}
+
+/* keyboard focus visible */
+.logo:focus {
+  outline: 3px solid rgba(118,75,162,0.12);
+  outline-offset: 4px;
+}
+
+/* respect reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .logo, .logo-accent, .logo::after { transition: none !important; }
+  .logo { transform: none !important; box-shadow: none !important; }
+}
+
+.logo {
+    font-size: 1.5rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: opacity 0.3s ease;
+    user-select: none; /* Prevents text selection when clicking */
+}
+
+.logo:hover {
+    opacity: 0.8;
+}
+
+.nav-links {
+    list-style: none;
+    display: flex;
+    gap: 0.9rem; /* reduced gap for smaller screens */
+    flex-wrap: wrap;
+    justify-content: center; /* center links on small screens */
+}
+
+.nav-links a {
+    color: var(--text);
+    text-decoration: none;
+    position: relative;
+    padding-bottom: 5px;
+}
+
+.nav-links a::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 2px;
+    bottom: 0;
+    left: 0;
+    background-color: var(--accent2);
+    transition: width 0.3s ease-in-out;
+}
+
+.nav-links a:hover::after {
+    width: 100%;
+}
+
+/* Optional: Change the active link style */
+.nav-links a.active::after {
+    width: 100%;
+    background-color: var(--accent2);
+}
+
+.nav-links a:hover {
+    color: var(--accent2);
+}
+
+section {
+    padding: 5rem 2rem;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+}
+
 .container {
     max-width: 1200px;
     margin: 0 auto;
-    padding: 20px;
-}
-h1, h2 {
     text-align: center;
-}
-a {
-    color: #fff;
-    text-decoration: none;
-}
-a:hover {
-    color: #ffd700;
+    padding-left: 1rem;  /* fluid container padding */
+    padding-right: 1rem; /* fluid container padding */
 }
 
-/* Hero Section */
-.hero {
+#hero {
+  position: relative;
+  display: flex;
+  align-items: center;           /* vertical center */
+  justify-content: center;       /* horizontal center */
+  min-height: calc(100vh - 64px);/* full viewport minus nav height */
+  height: auto;
+  padding: 0;                     /* remove extra offsets so centering is exact */
+  overflow: hidden;
+  background: transparent;        /* background handled by ::before if needed */
+}
+
+#hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    background-image: url("home.gif");
+    background-repeat: no-repeat;
+    background-position: center right;
+    background-size: cover; /* change to 'contain' if you prefer whole image visible */
+    opacity: 0.35; /* adjust to make text readable */
+    filter: saturate(0.95);
+    pointer-events: none;
+}
+
+/* ensure hero content is centered */
+.hero-content {
+  z-index: 2;
+  width: 100%;
+  max-width: 780px;
+  margin: 0 auto;
+  padding: 2rem 1rem;             /* small internal padding */
+  display: flex;
+  flex-direction: column;
+  align-items: center;            /* center horizontally */
+  justify-content: center;        /* center vertically */
+  text-align: center;
+  gap: 1rem;
+}
+
+/* ensure CTA stays centered and spaced */
+.cta-btn {
+  align-self: center;
+  margin-top: 0.6rem;
+}
+
+/* Mobile adjustments */
+@media (max-width: 900px) {
+    #hero {
+        padding: 3rem 1rem;
+        min-height: calc(80vh - 56px);
+    }
+    .hero-content {
+        padding: 1rem;
+        gap: 0.75rem;
+    }
+    .hero-content h2 {
+        font-size: 1.9rem;
+    }
+}
+
+@media (max-width: 480px) {
+    html { font-size: 15px; }
+    nav { height: 56px; }
+    body { padding-top: 56px; }
+    .profile-pic {
+        width: 160px;
+        height: 160px;
+    }
+    .hero-content h2 { font-size: 1.6rem; line-height: 1.2; }
+    .name-slider { font-size: 1.25rem; -webkit-text-stroke-width: 0.8px; }
+    .container { padding-left: 0.75rem; padding-right: 0.75rem; }
+}
+
+.project-grid, .skills-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1rem; /* reduced gap for smaller screens */
+    margin-top: 2rem;
+}
+
+.project-card, .skill {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 1.5rem;
+    border-radius: 10px;
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.project-card:hover, .skill:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+}
+
+.profile-pic {
+    width: 250px;
+    height: 250px;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 4px solid var(--accent1);
+    transition: all 0.3s ease;
+    box-shadow: 0 0 20px rgba(102, 126, 234, 0.2);
+}
+
+.profile-pic:hover {
+    transform: scale(1.05);
+    border-color: var(--accent2);
+    box-shadow: 
+        0 0 25px rgba(102, 126, 234, 0.4),
+        0 0 45px rgba(118, 75, 162, 0.3),
+        0 0 65px rgba(255, 107, 107, 0.2);
+}
+
+/* Improved CTA and sliding name: fixes "Dive In" visibility and keeps name visible while animating */
+
+/* CTA button in hero */
+.cta-btn {
+    z-index: 3;
+    display: inline-block;
+    padding: 0.75rem 1.2rem;
+    border-radius: 28px;
+    text-decoration: none;
+    font-weight: 600;
+    color: #fff;
+    background: linear-gradient(90deg, var(--accent1) 0%, var(--accent2) 100%);
+    box-shadow: 0 10px 30px rgba(118,75,162,0.18), 0 6px 18px rgba(255,107,107,0.06);
+    transition: transform 0.22s ease, box-shadow 0.22s ease, opacity 0.22s ease;
+}
+.cta-btn:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 18px 50px rgba(118,75,162,0.26), 0 10px 30px rgba(255,107,107,0.08);
+    opacity: 0.98;
+}
+
+/* Keep hero content above background */
+.hero-content a.cta-btn { z-index: 4; }
+
+/* Fixed name-slider: prevent clipping/duplication and make caret follow the reveal */
+/* Replace the existing name-slider styles with these */
+.name-slider {
+    position: relative;
+    font-size: 2rem;
+    font-weight: 600;
+    color: transparent;
+    -webkit-text-stroke: 1px var(--accent1);
+    margin-top: 1rem;
+    display: inline-block;
+    white-space: nowrap;
+    overflow: hidden; /* fixed: clip animated overlay */
+}
+
+.name-slider::before {
+    content: 'Mayur Solanki';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 0;
+    height: 100%;
+    color: var(--accent2);
+    -webkit-text-stroke: 0px;
+    border-right: 2px solid var(--accent2);
+    overflow: hidden;
+    animation: animate 6s ease-in-out infinite;
+}
+
+@keyframes animate {
+    0%, 10% {
+        width: 0;
+    }
+    45%, 55% {
+        width: 100%;
+        border-right-color: var(--accent2);
+    }
+    90%, 100% {
+        width: 0;
+        border-right-color: transparent;
+    }
+}
+
+/* Responsive / mobile-friendly adjustments */
+
+/* reserve space for fixed nav */
+nav { height: 64px; }
+body { padding-top: 64px; }
+
+/* sensible base font-size for scaling */
+html { font-size: 16px; }
+
+/* fluid container padding */
+.container { padding-left: 1rem; padding-right: 1rem; }
+
+/* make media/video safe: hide heavy media on small screens */
+.hero-video { object-fit: cover; }
+
+/* ensure hero content is not absolutely positioned on smaller screens */
+@media (max-width: 900px) {
+  /* Nav: allow wrap and center links */
+  .nav-container {
+    padding: 0.6rem 1rem;
+    align-items: center;
+  }
+  .nav-links {
+    gap: 0.9rem;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  /* Hide video on small devices to save bandwidth & avoid layout issues */
+  .hero-video { display: none; }
+  #hero::before { background-position: center; background-size: cover; }
+
+  /* Use normal flow for hero content so it centers naturally */
+  .hero-content {
+    position: static;
+    top: auto;
+    left: auto;
+    transform: none;
+    margin: 0 auto;
+    padding: 2rem 1rem;
+    text-align: center;
+    align-items: center;
+  }
+
+  #hero {
+    padding: 4rem 1rem;
+    min-height: 60vh;
+  }
+
+  /* About/profile adjustments */
+  #about .container {
+    padding: 1rem;
+  }
+  .profile-pic {
+    width: 200px;
+    height: 200px;
+  }
+
+  /* name-slider and CTA adjustments */
+  .name-slider { font-size: 1.5rem; }
+  .cta-btn { padding: 0.6rem 1rem; }
+
+  /* Contact icons center & resize */
+  .contact-icons { justify-content: center; gap: 0.6rem; }
+  .icon-link { width: 44px; height: 44px; border-radius: 8px; }
+  .icon-link svg { width: 20px; height: 20px; }
+}
+
+/* Small phones */
+@media (max-width: 480px) {
+  html { font-size: 15px; }
+  nav { height: 56px; }
+  body { padding-top: 56px; }
+  .profile-pic { width: 160px; height: 160px; }
+  .hero-content h2 { font-size: 1.6rem; line-height: 1.2; }
+  .name-slider { font-size: 1.25rem; -webkit-text-stroke-width: 0.8px; }
+  .container { padding-left: 0.75rem; padding-right: 0.75rem; }
+}
+
+/* Make images and cards fully flexible */
+img, video { max-width: 100%; height: auto; display: block; }
+.project-grid, .skills-grid { gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); }
+
+/* Accessibility / readability tweaks */
+.hero-overlay { background: rgba(10,10,20,0.5); } /* slightly stronger overlay on small screens */
+
+/* keep CTA reachable on very narrow viewports */
+@media (max-width: 360px) {
+  .cta-btn { font-size: 0.95rem; padding: 0.5rem 0.9rem; }
+}
+
+footer {
+    text-align: center;
+    padding: 1rem;
+    background: rgba(0, 0, 0, 0.8);
+}
+p{
+  margin-bottom: 20px;
+}
+
+/* Update the about section layout */
+#about .container {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
-    height: 100vh;
-    text-align: center;
-    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-    animation: fadeIn 2s ease-in-out;
-}
-.hero img {
-    width: 200px;
-    height:200px;
-    border-radius: 50%;
-    border: 5px solid #fff;
-    transition: transform 0.3s ease;
-}
-.hero img:hover {
-    transform: scale(1.1);
-}
-.hero h1 {
-    font-size: 3em;
-    margin: 20px 0;
-}
-.hero p {
-    font-size: 1.2em;
-    max-width: 600px;
-}
-.social-links {
-    margin-top: 30px;
-}
-.social-links a {
-    margin: 0 15px;
-    font-size: 2em;
-    transition: transform 0.3s ease;
-}
-.social-links a:hover {
-    transform: translateY(-10px);
+    gap: 2rem;
+    max-width: 800px;
+    margin: 0 auto;
 }
 
-/* Sections */
-section {
-    padding: 80px 0;
-    background: rgba(255, 255, 255, 0.1);
-    margin: 20px 0;
-    border-radius: 10px;
-    backdrop-filter: blur(10px);
-}
-.about, .skills, .projects, .contact {
-    text-align: center;
-}
-.skills ul {
-    list-style: none;
-    padding: 0;
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
-}
-.skills li {
-    background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
-    padding: 10px 20px;
-    margin: 10px;
-    border-radius: 20px;
-    color: #fff;
-}
-.projects .project {
-    background: rgba(255, 255, 255, 0.2);
-    padding: 20px;
-    margin: 20px;
-    border-radius: 10px;
-    transition: transform 0.3s ease;
-}
-.projects .project:hover {
-    transform: translateY(-10px);
-}
-
-/* Animations */
-@keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
-}
-
-/* Responsive */
+/* Make it responsive */
 @media (max-width: 768px) {
-    .hero h1 {
-        font-size: 2em;
+    .profile-pic {
+        width: 200px;
+        height: 200px;
     }
-    .hero img {
-        width: 150px;
-        height: 150px;
-    }
-    .social-links a {
-        font-size: 1.5em;
-    }
+}
+
+/* contact icons */
+.contact-icons {
+  display: flex;
+  gap: 0.9rem;
+  margin-top: 0.6rem;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.icon-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 10px;
+  background: rgba(255,255,255,0.03);
+  color: var(--text);
+  transition: transform .18s ease, box-shadow .18s ease, background .18s ease, color .18s ease;
+  text-decoration: none;
+}
+
+.icon-link svg {
+  width: 22px;
+  height: 22px;
+  display: block;
+  color: inherit;
+}
+
+.icon-link:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 14px 36px rgba(118,75,162,0.12);
+  background: linear-gradient(90deg, var(--accent1), var(--accent2));
+  color: #fff;
+}
+
+/* small screens */
+@media (max-width: 480px) {
+  .icon-link { width: 44px; height: 44px; }
+  .icon-link svg { width: 20px; height: 20px; }
+}
+
+/* Stronger logo weight and remove nav hover underline */
+.logo {
+  font-weight: 800 !important; /* make top name bolder */
+}
+
+/* remove the animated underline for nav links */
+.nav-links a::after {
+  display: none;
+  /* if you want to remove entirely, keep this; to restore later remove this rule */
+}
+
+/* ensure no text-decoration appears on hover */
+.nav-links a,
+.nav-links a:hover,
+.nav-links a:focus {
+  text-decoration: none;
+  outline: none;
 }
